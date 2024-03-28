@@ -13,7 +13,7 @@
   "entity.deadlydaggers.thrown_diamond_dagger" : "Diamond Dagger",
   "entity.deadlydaggers.thrown_netherite_dagger" : "Netherite Dagger",
 
-  "deadlydaggers.death.attack.backstab":"%1$s was backstabbed by an unknown assailant.",
-  "deadlydaggers.death.attack.backstab_player":"%1$s was backstabbed by %2$s.",
-  "deadlydaggers.death.attack.backstab_player.item":"%1$s was backstabbed by %2$s, using %3$s."
+  "death.attack.deadlydaggers.backstab":"%1$s was backstabbed by %2$s",
+  "death.attack.deadlydaggers.backstab.player":"%1$s was backstabbed by %2$s",
+  "death.attack.deadlydaggers.backstab.item":"%1$s was backstabbed by %2$s, using %3$s"
 }

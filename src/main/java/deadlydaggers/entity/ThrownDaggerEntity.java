@@ -184,7 +184,7 @@ public class ThrownDaggerEntity extends PersistentProjectileEntity {
                 if(isBehind) {
                 //    System.out.println("RANGED BACKSTAB");
                     livingEntity2.timeUntilRegen=0;
-                    livingEntity2.damage(DeadlyDaggers.getDamageSource(getWorld(), DeadlyDaggers.PLAYER_BACKSTAB_DAMAGE_TYPE), damage);
+                    livingEntity2.damage(DeadlyDaggers.getDamageSource(getWorld(), DeadlyDaggers.BACKSTAB_DAMAGE_TYPE, entity2), damage);
                     playSound(SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, 1.0F, 0.5F);
                 }
 

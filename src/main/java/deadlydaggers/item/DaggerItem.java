@@ -83,7 +83,7 @@ public class DaggerItem extends ToolItem implements Vanishable {
         if(isBehind) {
           //  System.out.println("BACKSTAB");
             target.timeUntilRegen=0;
-            target.damage(DeadlyDaggers.getDamageSource(attacker.getWorld(), DeadlyDaggers.PLAYER_BACKSTAB_DAMAGE_TYPE, attacker),(float)attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE));
+            target.damage(DeadlyDaggers.getDamageSource(attacker.getWorld(), DeadlyDaggers.BACKSTAB_DAMAGE_TYPE, attacker),(float)attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE));
             target.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, 1.0F, 0.5F);
         }
 

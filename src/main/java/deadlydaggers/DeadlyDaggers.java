@@ -142,7 +142,6 @@ public class DeadlyDaggers implements ModInitializer {
     }
 
     public static final RegistryKey<DamageType> BACKSTAB_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(MODID, "backstab"));
-    public static final RegistryKey<DamageType> PLAYER_BACKSTAB_DAMAGE_TYPE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(MODID, "backstab_player"));
 
     public static DamageSource getDamageSource(World world, RegistryKey<DamageType> key) {
         return new DamageSource(world.getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(key));

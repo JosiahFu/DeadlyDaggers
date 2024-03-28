@@ -42,10 +42,10 @@ public class ThrownDaggerEntityRenderer extends EntityRenderer<ThrownDaggerEntit
     public void render(ThrownDaggerEntity daggerEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
         matrixStack.multiply(getDegreesQuaternion(POSITIVE_Y, daggerEntity.getYaw()-90));
-        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Z, daggerEntity.getPitch() - 30));
+        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Z, daggerEntity.getPitch() - 85));
 //spinning daggers in flight
        if(!daggerEntity.isInGround()){
-        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Z, daggerEntity.age*-20));
+        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Y, daggerEntity.age*-20));
        }
         MinecraftClient.getInstance().getItemRenderer()
                 .renderItem(daggerEntity.asItemStack(), ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, i, 700000, matrixStack, vertexConsumerProvider, daggerEntity.getWorld(), 1);

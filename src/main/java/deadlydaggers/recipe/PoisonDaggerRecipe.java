@@ -12,8 +12,17 @@ import net.minecraft.recipe.book.CraftingRecipeCategory;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PoisonDaggerRecipe extends SpecialCraftingRecipe {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeadlyDaggers.MODID);
+    private static void copyNbt(NbtCompound source, NbtCompound target, String key) {
+        if (source.contains(key)) {
+            target.put(key, source.get(key));
+        }
+    }
+
     public PoisonDaggerRecipe(Identifier id, CraftingRecipeCategory category) {
         super(id, category);
     }
@@ -26,10 +35,12 @@ public class PoisonDaggerRecipe extends SpecialCraftingRecipe {
         for (ItemStack stack : inventory.getInputStacks()) {
             if (!hasDagger && stack.getItem() instanceof DaggerItem) hasDagger = true;
             else if (!hasPotion && stack.isOf(Items.POTION)) hasPotion = true;
-            else return false;
+            else if (!stack.isEmpty()) return false;
         }
 
-        return (hasPotion && hasDagger);
+        LOGGER.info("{}, {}", hasPotion, hasDagger);
+
+        return hasPotion && hasDagger;
     }
 
     @Override
@@ -42,17 +53,20 @@ public class PoisonDaggerRecipe extends SpecialCraftingRecipe {
             else if (stack.isOf(Items.POTION)) potion = stack;
         }
 
-        if (dagger == null || potion == null) return null;
+        if (dagger == null || potion == null) return ItemStack.EMPTY;
 
         NbtCompound potionNbt = potion.getNbt();
 
-        if (potionNbt == null) return null;
+        if (potionNbt == null) return ItemStack.EMPTY;
 
         ItemStack outputDagger = dagger.copy();
         NbtCompound daggerNbt = outputDagger.getOrCreateNbt();
-        daggerNbt.put("Potion", potionNbt.get("Potion"));
-        daggerNbt.put("CustomPotionEffects", potionNbt.get("CustomPotionEffects"));
-        daggerNbt.put("CustomPotionColor", potionNbt.get("CustomPotionColor"));
+
+        copyNbt(potionNbt, daggerNbt, "Potion");
+        copyNbt(potionNbt, daggerNbt, "CustomPotionEffects");
+        copyNbt(potionNbt, daggerNbt, "CustomPotionColor");
+
+        LOGGER.info("{}", outputDagger);
 
         return outputDagger;
     }

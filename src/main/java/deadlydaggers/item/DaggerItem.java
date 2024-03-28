@@ -9,7 +9,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -23,9 +22,9 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -84,7 +83,7 @@ public class DaggerItem extends ToolItem implements Vanishable {
         if(isBehind) {
           //  System.out.println("BACKSTAB");
             target.timeUntilRegen=0;
-            target.damage(new DeadlyDaggers.BackstabDamageSource(attacker),(float)attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE));
+            target.damage(DeadlyDaggers.getDamageSource(attacker.getWorld(), DeadlyDaggers.PLAYER_BACKSTAB_DAMAGE_TYPE, attacker),(float)attacker.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE));
             target.playSound(SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, 1.0F, 0.5F);
         }
 
@@ -108,8 +107,7 @@ public class DaggerItem extends ToolItem implements Vanishable {
         if (state.isOf(Blocks.COBWEB) || state.isIn(BlockTags.WOOL)) {
             return 15.0F;
         } else {
-            Material material = state.getMaterial();
-            return material != Material.PLANT && material != Material.REPLACEABLE_PLANT && !state.isIn(BlockTags.LEAVES) && material != Material.GOURD ? 1.0F : 1.5F;
+            return state.isIn(DeadlyDaggers.MINEABLE_DAGGER) ? 1.5f : 1f;
         }
     }
 

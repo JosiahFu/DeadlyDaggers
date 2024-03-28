@@ -16,7 +16,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
@@ -48,7 +49,7 @@ public class ThrownDaggerEntity extends PersistentProjectileEntity {
 
 
     @Override
-    public Packet<?> createSpawnPacket() {
+    public Packet<ClientPlayPacketListener> createSpawnPacket() {
         return ThrownDaggerProjectileSpawnPacket.createPacket(this);
     }
 
@@ -86,7 +87,7 @@ public class ThrownDaggerEntity extends PersistentProjectileEntity {
         if ((this.dealtDamage || this.isNoClip()) && entity != null) {
             int i = this.dataTracker.get(LOYALTY);
             if (i > 0 && !this.isOwnerAlive()) {
-                if (!this.world.isClient && this.pickupType == PersistentProjectileEntity.PickupPermission.ALLOWED) {
+                if (!this.getWorld().isClient && this.pickupType == PersistentProjectileEntity.PickupPermission.ALLOWED) {
                     this.dropStack(this.asItemStack(), 0.1F);
                 }
 
@@ -95,7 +96,7 @@ public class ThrownDaggerEntity extends PersistentProjectileEntity {
                 this.setNoClip(true);
                 Vec3d vec3d = new Vec3d(entity.getX() - this.getX(), entity.getEyeY() - this.getY(), entity.getZ() - this.getZ());
                 this.setPos(this.getX(), this.getY() + vec3d.y * 0.015D * (double)i, this.getZ());
-                if (this.world.isClient) {
+                if (this.getWorld().isClient) {
                     this.lastRenderY = this.getY();
                 }
 
@@ -158,7 +159,7 @@ public class ThrownDaggerEntity extends PersistentProjectileEntity {
         }
 
         Entity entity2 = this.getOwner();
-        DamageSource damageSource = DamageSource.thrownProjectile(this, entity2 == null ? this : entity2);
+        DamageSource damageSource = getDamageSources().mobProjectile(this, entity2 instanceof LivingEntity ? (LivingEntity) entity2 : null);
         this.dealtDamage = true;
         SoundEvent soundEvent = SoundEvents.ITEM_TRIDENT_HIT;
         if (entity.damage(damageSource, damage)) {
@@ -183,7 +184,7 @@ public class ThrownDaggerEntity extends PersistentProjectileEntity {
                 if(isBehind) {
                 //    System.out.println("RANGED BACKSTAB");
                     livingEntity2.timeUntilRegen=0;
-                    livingEntity2.damage(new DeadlyDaggers.BackstabDamageSource(this.getOwner()),damage);
+                    livingEntity2.damage(DeadlyDaggers.getDamageSource(getWorld(), DeadlyDaggers.PLAYER_BACKSTAB_DAMAGE_TYPE), damage);
                     playSound(SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, 1.0F, 0.5F);
                 }
 

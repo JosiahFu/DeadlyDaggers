@@ -2,7 +2,6 @@ package deadlydaggers.network;
 
 import deadlydaggers.DeadlyDaggers;
 import deadlydaggers.entity.ThrownDaggerEntity;
-import deadlydaggers.item.DaggerItem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,12 +14,12 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
-
 
 import java.util.UUID;
 
@@ -35,9 +34,9 @@ public class ThrownDaggerProjectileSpawnPacket {
 
 
 
-        public static Packet<?> createPacket(ThrownDaggerEntity entity) {
+        public static Packet<ClientPlayPacketListener> createPacket(ThrownDaggerEntity entity) {
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeVarInt(Registry.ENTITY_TYPE.getRawId(entity.getType())); //1
+            buf.writeVarInt(Registries.ENTITY_TYPE.getRawId(entity.getType())); //1
             buf.writeUuid(entity.getUuid()); //2
             buf.writeVarInt(entity.getId()); //3
             buf.writeDouble(entity.getX()); //4
@@ -60,7 +59,7 @@ public class ThrownDaggerProjectileSpawnPacket {
 
         @Environment(EnvType.CLIENT)
         public static void onPacket(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf buffer, PacketSender sender) {
-            EntityType<?> type = Registry.ENTITY_TYPE.get(buffer.readVarInt()); //1
+            EntityType<?> type = Registries.ENTITY_TYPE.get(buffer.readVarInt()); //1
             UUID entityUUID = buffer.readUuid(); //2
             int entityID = buffer.readVarInt(); //3
             double x = buffer.readDouble(); //4

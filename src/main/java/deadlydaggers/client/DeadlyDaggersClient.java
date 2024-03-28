@@ -7,9 +7,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.util.Identifier;
@@ -19,12 +19,12 @@ public class DeadlyDaggersClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_DIAMOND_DAGGER,(context) -> new ThrownDaggerEntityRenderer(context));
-        EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_WOODEN_DAGGER,(context) -> new ThrownDaggerEntityRenderer(context));
-        EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_STONE_DAGGER,(context) -> new ThrownDaggerEntityRenderer(context));
-        EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_IRON_DAGGER,(context) -> new ThrownDaggerEntityRenderer(context));
-        EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_GOLD_DAGGER,(context) -> new ThrownDaggerEntityRenderer(context));
-        EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_NETHERITE_DAGGER,(context) -> new ThrownDaggerEntityRenderer(context));
+        EntityRendererRegistry.register(DeadlyDaggers.THROWN_DIAMOND_DAGGER, ThrownDaggerEntityRenderer::new);
+        EntityRendererRegistry.register(DeadlyDaggers.THROWN_WOODEN_DAGGER, ThrownDaggerEntityRenderer::new);
+        EntityRendererRegistry.register(DeadlyDaggers.THROWN_STONE_DAGGER, ThrownDaggerEntityRenderer::new);
+        EntityRendererRegistry.register(DeadlyDaggers.THROWN_IRON_DAGGER, ThrownDaggerEntityRenderer::new);
+        EntityRendererRegistry.register(DeadlyDaggers.THROWN_GOLD_DAGGER, ThrownDaggerEntityRenderer::new);
+        EntityRendererRegistry.register(DeadlyDaggers.THROWN_NETHERITE_DAGGER, ThrownDaggerEntityRenderer::new);
         //old 1.16.5 way of doing it
         //EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_WOODEN_DAGGER, (dispatcher, context) -> new ThrownDaggerEntityRenderer(dispatcher));
      //   EntityRendererRegistry.INSTANCE.register(DeadlyDaggers.THROWN_STONE_DAGGER, (dispatcher, context) -> new ThrownDaggerEntityRenderer(dispatcher));
@@ -37,7 +37,7 @@ public class DeadlyDaggersClient implements ClientModInitializer {
 
 
         for (Item dagger : DeadlyDaggers.DAGGER_MAP.inverse().keySet()) {
-            FabricModelPredicateProviderRegistry.register(dagger, new Identifier("poisoned"), (itemStack, clientWorld, livingEntity,provider) -> {
+            ModelPredicateProviderRegistry.register(dagger, new Identifier("poisoned"), (itemStack, clientWorld, livingEntity, provider) -> {
                 if (PotionUtil.getPotionEffects(itemStack).isEmpty()) {
                     return 0.0F;
                 } else return 1.0F;

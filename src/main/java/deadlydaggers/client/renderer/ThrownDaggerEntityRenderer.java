@@ -1,28 +1,32 @@
 package deadlydaggers.client.renderer;
 
-import deadlydaggers.DeadlyDaggers;
 import deadlydaggers.entity.ThrownDaggerEntity;
-import deadlydaggers.item.DaggerItem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.ProjectileEntityRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.*;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class ThrownDaggerEntityRenderer extends EntityRenderer<ThrownDaggerEntity> {
+    private static final Vector3f POSITIVE_Y = new Vector3f(0, 1, 0);
+    private static final Vector3f POSITIVE_Z = new Vector3f(0, 0, 1);
+
+    private static Quaternionf getDegreesQuaternion(Vector3f vector3f, float degrees) {
+        float radians = (float) (degrees * Math.PI / 180);
+        float f = (float) Math.sin(radians / 2.0f);
+
+        return new Quaternionf(
+            vector3f.x * f,
+            vector3f.y * f,
+            vector3f.z * f,
+            Math.cos(radians / 2.0f)
+        );
+    }
+
    // public ThrownDaggerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
    //     super(entityRenderDispatcher);
    // }
@@ -37,14 +41,14 @@ public class ThrownDaggerEntityRenderer extends EntityRenderer<ThrownDaggerEntit
 
     public void render(ThrownDaggerEntity daggerEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         matrixStack.push();
-        matrixStack.multiply((Vec3f.POSITIVE_Y.getDegreesQuaternion(daggerEntity.getYaw()-90)));
-        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(daggerEntity.getPitch() - 30));
+        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Y, daggerEntity.getYaw()-90));
+        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Z, daggerEntity.getPitch() - 30));
 //spinning daggers in flight
        if(!daggerEntity.isInGround()){
-        matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(daggerEntity.age*-20));
+        matrixStack.multiply(getDegreesQuaternion(POSITIVE_Z, daggerEntity.age*-20));
        }
         MinecraftClient.getInstance().getItemRenderer()
-                .renderItem(daggerEntity.asItemStack(), ModelTransformation.Mode.THIRD_PERSON_RIGHT_HAND, i, 700000, matrixStack, vertexConsumerProvider,1);
+                .renderItem(daggerEntity.asItemStack(), ModelTransformationMode.THIRD_PERSON_RIGHT_HAND, i, 700000, matrixStack, vertexConsumerProvider, daggerEntity.getWorld(), 1);
         matrixStack.pop();
         super.render(daggerEntity, f, g, matrixStack, vertexConsumerProvider, i);
     }

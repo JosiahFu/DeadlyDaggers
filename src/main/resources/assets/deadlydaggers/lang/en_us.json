@@ -14,6 +14,6 @@
   "entity.deadlydaggers.thrown_netherite_dagger" : "Netherite Dagger",
 
   "deadlydaggers.death.attack.backstab":"%1$s was backstabbed by an unknown assailant.",
-  "deadlydaggers.death.attack.backstab.creature":"%1$s was backstabbed by %2$s.",
-  "deadlydaggers.death.attack.backstab.creature.item":"%1$s was backstabbed by %2$s, using %3$s."
+  "deadlydaggers.death.attack.backstab_player":"%1$s was backstabbed by %2$s.",
+  "deadlydaggers.death.attack.backstab_player.item":"%1$s was backstabbed by %2$s, using %3$s."
 }

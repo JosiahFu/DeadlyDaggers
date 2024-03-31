@@ -1,8 +1,7 @@
 {
   "replace": false,
   "values": [
-    "deadlydaggers:backstab",
-    "deadlydaggers:backstab_player"
+    "deadlydaggers:backstab"
   ]
 }
 

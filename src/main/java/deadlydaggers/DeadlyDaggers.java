@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.ProjectileDispenserBehavior;
@@ -49,12 +50,12 @@ public class DeadlyDaggers implements ModInitializer {
 
     public static final String MODID = "deadlydaggers";
 
-    public static final DaggerItem WOODEN_DAGGER = new DaggerItem(ToolMaterials.WOOD, 1, -0.5F, new FabricItemSettings());
-    public static final DaggerItem STONE_DAGGER = new DaggerItem(ToolMaterials.STONE,1,-0.5f, new FabricItemSettings());
-    public static final DaggerItem IRON_DAGGER = new DaggerItem(ToolMaterials.IRON,1,-0.5f, new FabricItemSettings());
-    public static final DaggerItem GOLD_DAGGER = new DaggerItem(ToolMaterials.GOLD,1,-0.5f, new FabricItemSettings());
-    public static final DaggerItem DIAMOND_DAGGER = new DaggerItem(ToolMaterials.DIAMOND,1,-0.5f, new FabricItemSettings());
-    public static final DaggerItem NETHERITE_DAGGER = new DaggerItem(ToolMaterials.NETHERITE,1,-0.5f, new FabricItemSettings());
+    public static final DaggerItem WOODEN_DAGGER = new DaggerItem(ToolMaterials.WOOD, 1, -0.5F, -1.5f, new FabricItemSettings());
+    public static final DaggerItem STONE_DAGGER = new DaggerItem(ToolMaterials.STONE,1,-0.5f, -1.5f, new FabricItemSettings());
+    public static final DaggerItem IRON_DAGGER = new DaggerItem(ToolMaterials.IRON,1,-0.5f, -1.5f, new FabricItemSettings());
+    public static final DaggerItem GOLD_DAGGER = new DaggerItem(ToolMaterials.GOLD,1,-0.5f, -1.5f, new FabricItemSettings());
+    public static final DaggerItem DIAMOND_DAGGER = new DaggerItem(ToolMaterials.DIAMOND,1,-0.5f, -1.5f, new FabricItemSettings());
+    public static final DaggerItem NETHERITE_DAGGER = new DaggerItem(ToolMaterials.NETHERITE,1,-0.5f, -1.5f, new FabricItemSettings());
 
 
 
@@ -84,6 +85,10 @@ public class DeadlyDaggers implements ModInitializer {
             new Identifier("minecraft","chests/stronghold_corridor"),
             new Identifier("minecraft","chests/village/village_weaponsmith")
     );
+
+    public static boolean isBetterCombat() {
+        return FabricLoader.getInstance().isModLoaded("bettercombat");
+    }
 
     private static EntityType<ThrownDaggerEntity> registerDagger(String id){
        return Registry.register(Registries.ENTITY_TYPE,new Identifier(DeadlyDaggers.MODID,id),

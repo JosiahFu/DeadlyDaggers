@@ -39,14 +39,17 @@ public class DaggerItem extends ToolItem implements Vanishable {
     private EntityType<ThrownDaggerEntity> cachedType = null;
     private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
 
-
-    public DaggerItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Item.Settings settings) {
+    public DaggerItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, float attackSpeedBetterCombat, Item.Settings settings) {
         super(toolMaterial, settings);
         float attackDamage1 = (float) attackDamage + toolMaterial.getAttackDamage();
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", attackDamage1, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(ReachEntityAttributes.ATTACK_RANGE, new EntityAttributeModifier("Attack range", -1.0, EntityAttributeModifier.Operation.ADDITION));
+        if (!DeadlyDaggers.isBetterCombat()) {
+            builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", attackSpeed, EntityAttributeModifier.Operation.ADDITION));
+            builder.put(ReachEntityAttributes.ATTACK_RANGE, new EntityAttributeModifier("Attack range", -1.0, EntityAttributeModifier.Operation.ADDITION));
+        } else {
+            builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", attackSpeedBetterCombat, EntityAttributeModifier.Operation.ADDITION));
+        }
         this.attributeModifiers = builder.build();
 
     }
@@ -152,8 +155,5 @@ public class DaggerItem extends ToolItem implements Vanishable {
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot) {
         return equipmentSlot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(equipmentSlot);
     }
-
-
-
-    }
+}
 

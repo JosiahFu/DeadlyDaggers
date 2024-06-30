@@ -19,13 +19,17 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
@@ -154,6 +158,33 @@ public class DaggerItem extends ToolItem implements Vanishable {
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot) {
         return equipmentSlot == EquipmentSlot.MAINHAND ? attributeModifiers : super.getAttributeModifiers(equipmentSlot);
+    }
+
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType != ClickType.RIGHT || PotionUtil.getPotion(stack) != Potions.EMPTY || !otherStack.isOf(Items.POTION))
+            return super.onClicked(stack, otherStack, slot, clickType, player, cursorStackReference);
+
+        PotionUtil.setPotion(stack, PotionUtil.getPotion(otherStack));
+        if (!player.getAbilities().creativeMode) {
+            ItemStack remainder = otherStack.getRecipeRemainder();
+            cursorStackReference.set(remainder.isEmpty() ? new ItemStack(Items.GLASS_BOTTLE) : remainder);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onStackClicked(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player) {
+        ItemStack otherStack = slot.getStack();
+        if (clickType != ClickType.RIGHT || PotionUtil.getPotion(stack) != Potions.EMPTY || !otherStack.isOf(Items.POTION))
+            return super.onStackClicked(stack, slot, clickType, player);
+
+        PotionUtil.setPotion(stack, PotionUtil.getPotion(otherStack));
+        if (!player.getAbilities().creativeMode) {
+            ItemStack remainder = otherStack.getRecipeRemainder();
+            slot.setStack(remainder.isEmpty() ? new ItemStack(Items.GLASS_BOTTLE) : remainder);
+        }
+        return true;
     }
 }
 
